@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package streamservice;
+
+service StreamService {
+  rpc StreamData (StreamRequest) returns (stream StreamResponse) {}
+}
+
+message StreamRequest {
+  string database = 1; // "firestore" or "realtime"
+  string collection_path = 2;
+  string document_id = 3; // Optional, for single document stream
+  repeated Filter filters = 4;
+  int32 limit = 5;
+  Sort sort = 6;
+}
+
+message Filter {
+  string field = 1;
+  string operation = 2;
+  string value = 3;
+  repeated Filter filters = 4; // For nested filters (OR/AND)
+}
+
+message Sort {
+  string field = 1;
+  bool ascending = 2;
+}
+
+message StreamResponse {
+  string data = 1;
+}
